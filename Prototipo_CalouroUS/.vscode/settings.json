@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "CalouroUS.sln"
+    "dotnet.defaultSolution": "Prototipo_CalouroUS.sln"
 }

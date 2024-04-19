@@ -18,6 +18,8 @@ public class Character : MonoBehaviour
     public Animator animator;
     private bool viradoParaEsquerda = false;
 
+    [SerializeField] private GameObject cenario;
+
     void Start()
     {
         this.body = GetComponent<Rigidbody2D>();
@@ -85,5 +87,18 @@ public class Character : MonoBehaviour
     {
         animator.SetBool("Death", false);
         fantasma = false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision){
+        if(collision.gameObject.tag == "locked"){
+            cenario.SetActive(false);
+        }
+    }
+ 
+    // consertar 
+    private void OnTriggerExit2D(Collider2D collision){
+        if(collision.gameObject.tag == "locked"){
+            cenario.SetActive(true);
+        }
     }
 }

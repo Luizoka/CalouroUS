@@ -19,11 +19,16 @@ public class Character : MonoBehaviour
     private bool viradoParaEsquerda = false;
 
     [SerializeField] private GameObject cenario;
+    public float alfaBloqueado = 0f;
+    private float alfaNormal = 1f;
+    private Renderer cenarioRenderer;
 
     void Start()
     {
         this.body = GetComponent<Rigidbody2D>();
         this.animator = GetComponent<Animator>();
+        this.cenarioRenderer = cenario.GetComponent<Renderer>();
+        SetAlfa(alfaNormal);
     }
 
     void Update()
@@ -89,16 +94,38 @@ public class Character : MonoBehaviour
         fantasma = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision){
-        if(collision.gameObject.tag == "locked"){
-            cenario.SetActive(false);
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "locked")
+        {
+            // Define o alfa para 0 quando o objeto estiver bloqueado
+            SetAlfa(alfaBloqueado);
         }
     }
- 
-    // consertar 
-    private void OnTriggerExit2D(Collider2D collision){
-        if(collision.gameObject.tag == "locked"){
-            cenario.SetActive(true);
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "locked")
+        {
+            // Retorna o alfa ao valor normal quando o objeto não estiver mais bloqueado
+            SetAlfa(alfaNormal);
+        }
+    }
+
+     private void SetAlfa(float alfa)
+    {
+        // Verifica se o componente de renderização existe
+        if (cenarioRenderer != null)
+        {
+            // Define o alfa do material do cenario
+            Material material = cenarioRenderer.material;
+            Color cor = material.color;
+            cor.a = alfa;
+            material.color = cor;
+        }
+        else
+        {
+            Debug.LogWarning("O componente de renderização do cenario não foi encontrado!");
         }
     }
 }

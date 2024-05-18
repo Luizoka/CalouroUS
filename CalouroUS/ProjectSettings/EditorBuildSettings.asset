@@ -8,4 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Cena Principal.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/wireTask.unity
+    guid: e1981b3b2ec56044ab8d332d28e993b0
+  - enabled: 1
+    path: Assets/Scenes/logicGates.unity
+    guid: 76c926a2792bbb3488377138ba673336
+  - enabled: 1
+    path: Assets/Scenes/binaryCOnversion.unity
+    guid: e729299c45082c547aa04fde04e1aa47
   m_configObjects: {}

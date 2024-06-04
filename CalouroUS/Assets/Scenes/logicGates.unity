@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 202268168}
   - component: {fileID: 202268169}
   m_Layer: 0
-  m_Name: task op (16)
+  m_Name: task op (17)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -638,7 +638,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465746039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -656,7 +656,7 @@ GameObject:
   - component: {fileID: 511203585}
   - component: {fileID: 511203584}
   m_Layer: 0
-  m_Name: task op (5)
+  m_Name: task op (16)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1203,7 +1203,7 @@ GameObject:
   - component: {fileID: 781490293}
   - component: {fileID: 781490292}
   m_Layer: 0
-  m_Name: task op (8)
+  m_Name: task op (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1464,7 +1464,7 @@ GameObject:
   - component: {fileID: 1322082998}
   - component: {fileID: 1322082997}
   m_Layer: 0
-  m_Name: task op (6)
+  m_Name: task op (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1893,7 +1893,7 @@ GameObject:
   - component: {fileID: 1533308915}
   - component: {fileID: 1533308914}
   m_Layer: 0
-  m_Name: task op (11)
+  m_Name: task op (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2180,7 +2180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c60c3c84310bfbd4ea21880ff91ddef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LogicGateButton: {fileID: 0}
+  LogicGateButton: {fileID: 2055128319}
   isOn: 0
 --- !u!61 &1631236395
 BoxCollider2D:
@@ -3029,7 +3029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c60c3c84310bfbd4ea21880ff91ddef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LogicGateButton: {fileID: 2055128319}
+  LogicGateButton: {fileID: 1419404894}
   isOn: 0
 --- !u!61 &2056126432
 BoxCollider2D:

@@ -8,25 +8,28 @@ public class logicGateScript : MonoBehaviour
 {
     public GameObject LogicGateButton;
     [SerializeField] private bool isOn = false;
-    int[] buttons = {0, 0, 0, 0, 0, 0, 0, 0};
+    int[] buttons = { 0, 0, 0, 0, 0, 0, 0, 0 };
     Action[] functions;
-     // Inicialização do array com tamanho 8
     GameObject parentObject;
+
     void Start()
     {
         parentObject = GameObject.Find("logicGate");
 
         GameObject task_op_10 = parentObject.transform.Find("task op (10)").gameObject;
-        if (task_op_10 != null){task_op_10.SetActive(true);}
-
-        GameObject task_op_15 = parentObject.transform.Find("task op (15)").gameObject;
-        if ( task_op_15 != null){task_op_15.SetActive(true);}
-
-        GameObject task_op_16 = parentObject.transform.Find("task op (16)").gameObject;
-        if ( task_op_16 != null){task_op_16.SetActive(true);}
+        if (task_op_10 != null) { task_op_10.SetActive(true); }
 
         GameObject task_op_14 = parentObject.transform.Find("task op (14)").gameObject;
-        if ( task_op_14 != null){task_op_14.SetActive(true);}
+        if (task_op_14 != null) { task_op_14.SetActive(true); }
+
+        GameObject task_op_15 = parentObject.transform.Find("task op (15)").gameObject;
+        if (task_op_15 != null) { task_op_15.SetActive(true); }
+
+        GameObject task_op_17 = parentObject.transform.Find("task op (17)").gameObject;
+        if (task_op_17 != null) { task_op_17.SetActive(true); }
+
+        XOR();
+        NOT();
     }
 
     private void OnMouseUp()
@@ -39,7 +42,6 @@ public class logicGateScript : MonoBehaviour
     void Update()
     {
         functions = new Action[8];
-
         // Atribuição das referências das funções aos elementos do array
         functions[0] = NOT;
         functions[1] = OR;
@@ -50,300 +52,184 @@ public class logicGateScript : MonoBehaviour
         functions[6] = NAND;
         functions[7] = NOT;
 
-         if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 
             if (hit.collider != null)
             {
-                Debug.Log("CLICKED " + hit.collider.name);
+                //Debug.Log("CLICKED " + hit.collider.name);
                 LogicGates(hit.collider.name, functions);
-                Debug.Log("Conteúdo do array buttons: [" + string.Join(", ", buttons) + "]");
+                //Debug.Log("Conteúdo do array buttons: [" + string.Join(", ", buttons) + "]");
             }
         }
     }
 
     public void LogicGates(string name, Action[] functions)
     {
-         Match match = Regex.Match(name, @"\((\d+)\)");
+        Match match = Regex.Match(name, @"\((\d+)\)");
 
-         if(match.Success){
+        if (match.Success)
+        {
             string numberStr = match.Groups[1].Value;
             Debug.Log("Olha o numberStr: " + numberStr);
             int number = int.Parse(numberStr);
 
             buttons[number] = buttons[number] > 0 ? 0 : 1;
+            GameObject task_op_button = parentObject.transform.Find($"task op ({number})").gameObject;
+            //Debug.Log("Olha o task op principal: " + task_op_button);
+            if (task_op_button != null) { task_op_button.SetActive(!task_op_button.activeSelf); }
             functions[number]();
-         }
+        }
+    }
+
+    public void buttonsActivate(int buttonNumber, bool activeState)
+    {
+        GameObject parentObject = GameObject.Find("logicGate");
+        //Debug.Log("Funciona porra");
+        GameObject task_op_ = parentObject.transform.Find($"task op ({buttonNumber})").gameObject;
+        //Debug.Log("Tá pegando esse caralho dessa porra ?: " + task_op_);
+        task_op_.SetActive(activeState);
     }
 
     public void NOT()
     {
-       if(buttons[0] == 0) 
-       {
-            AND();  
-            GameObject task_op_10 = parentObject.transform.Find("task op (10)").gameObject;
-            if (task_op_10 != null){task_op_10.SetActive(true);}
+        bool not1 = buttons[0] > 0 ? true : false;
+        bool not3 = buttons[7] > 0 ? true : false;
+        GameObject parentObject = GameObject.Find("logicGate");
 
-            GameObject task_op_8 = parentObject.transform.Find("task op (8)").gameObject;
-            if ( task_op_8 != null){task_op_8.SetActive(false);}
-       }
-       if(buttons[0] == 1)
-       {
-         GameObject task_op_10 = parentObject.transform.Find("task op (10)").gameObject;
-         if (task_op_10 != null){task_op_10.SetActive(false);}
+        Debug.Log("not3: " + not3);
 
-         GameObject task_op_8 = parentObject.transform.Find("task op (8)").gameObject;
-         if ( task_op_8 != null){task_op_8.SetActive(true);}
+        if (parentObject != null)
+        {
+            //Debug.Log("Passou dessa parte ?");
+            //Debug.Log("not1: " + not1);
 
-       }
-       if(buttons[7] == 0)
-       {
-           NAND();
-           GameObject task_op_16 = parentObject.transform.Find("task op (16)").gameObject;
-           if ( task_op_16 != null){task_op_16.SetActive(true);}
+            if (not1 == true)
+            {
+                buttonsActivate(0, true);
+                buttonsActivate(10, false);
+            }
 
-           GameObject task_op_7 = parentObject.transform.Find("task op (7)").gameObject;
-           if ( task_op_7 != null){task_op_7.SetActive(false);}
-       }
+            if (not3 == true) { buttonsActivate(17, false); buttonsActivate(7, true); NAND();}
 
-       if(buttons[7] == 1)
-       {
-          GameObject task_op_16 = parentObject.transform.Find("task op (16)").gameObject;
-          task_op_16.SetActive(false);
+            if (not1 == false)
+            {
+                buttonsActivate(10, true);
+                buttonsActivate(0, false);
+            }
 
-          GameObject task_op_7 = parentObject.transform.Find("task op (7)").gameObject;
-          task_op_7.SetActive(true);
-       }
+            if (not3 == false) { buttonsActivate(17, true); buttonsActivate(7, false); NAND();}
+        }
+        NAND();
+        AND();
+        XOR();
     }
 
     public void AND()
     {
-          if(buttons[0] == 0)
-          {
-             GameObject parentObject = GameObject.Find("logicGate");
-             GameObject task_op_10 = parentObject.transform.Find("task op (10)").gameObject;
-             if (task_op_10 != null){task_op_10.SetActive(true);}
+        //Debug.Log("Tá chegando no AND fdp ?");
+        bool button3 = buttons[3] == 0 ? false : true;
+        buttonsActivate(3, button3);
+        GameObject parentObject = GameObject.Find("logicGate");
+        GameObject and1 = GameObject.Find("task op (10)");
+        GameObject and2 = GameObject.Find("task op (16)");
+        GameObject and3 = GameObject.Find("task op (9)");
+        GameObject and4 = GameObject.Find("task op (3)");
 
-            if(!(buttons[1] == 0 && buttons[2] == 0) && buttons[3] == 1 )
-            {
-                GameObject task_op_12 = parentObject.transform.Find("task op (12)").gameObject;
-                if (task_op_12 != null){task_op_12.SetActive(true);} 
-            }
-            if(buttons[3] == 1)
-            {
-                GameObject task_op_3 = parentObject.transform.Find("task op (3)").gameObject;
-                if (task_op_3 != null){task_op_3.SetActive(true);} 
-                XOR();
-            }
-            if((buttons[3] == 0) || (buttons[1] == 0 && buttons[2] == 0))
-            {
-                GameObject task_op_3 = parentObject.transform.Find("task op (3)").gameObject;
-                if (task_op_3 != null){task_op_3.SetActive(false);} 
-
-                GameObject task_op_12 = parentObject.transform.Find("task op (12)").gameObject;
-                if (task_op_12 != null){task_op_12.SetActive(false);}
-                XOR(); 
-            }
-          }
+        if (and1 != null && and2 != null) {buttonsActivate(9, true);} 
+        else 
+        {
+            buttonsActivate(9, false);
+        }
+        if (and3 != null && button3 == true) 
+        {
+            buttonsActivate(12, true);
+        } 
+        else 
+        {
+            buttonsActivate(12, false);
+        }
+        XOR();
     }
 
     public void NAND()
     {
-       if(buttons[7] == 0 && buttons[6] == 1)
-       {
-         GameObject parentObject_1 = GameObject.Find("logicGate");
-         GameObject task_op_7 = parentObject_1.transform.Find("task op (7)").gameObject;
-         if ( task_op_7 != null){task_op_7.SetActive(false);}
+        bool button6 = buttons[6] > 0 ? true : false;
+        buttonsActivate(6, button6);
 
-         GameObject parentObject_2 = GameObject.Find("logicGate");
-         GameObject task_op_15 = parentObject_2.transform.Find("task op (15)").gameObject;
-         if (task_op_15 != null){task_op_15.SetActive(false);}
+        GameObject parentObject = GameObject.Find("logicGate");
+        GameObject nand1 = GameObject.Find("task op (6)");
+        GameObject nand2 = GameObject.Find("task op (17)");
 
-         GameObject parentObject_3 = GameObject.Find("logicGate");
-         GameObject task_op_11 = parentObject_3.transform.Find("task op (11)").gameObject;
-         if (task_op_11 != null){task_op_11.SetActive(true);}
-       }
-       else
-       {
-           GameObject parentObject_2 = GameObject.Find("logicGate");
-           GameObject task_op_15 = parentObject_2.transform.Find("task op (15)").gameObject;
-           task_op_15.SetActive(true);
-           
-            if(buttons[6] == 1)
-            {
-                GameObject parentObject = GameObject.Find("logicGate");
-                GameObject task_op_11 = parentObject.transform.Find("task op (11)").gameObject;
-                task_op_11.SetActive(true);
-                if(buttons[7] == 1){
-                    GameObject parentObject_3 = GameObject.Find("logicGate");
-                    GameObject task_op_15_1 = parentObject_3.transform.Find("task op (15)").gameObject;
-                    if ( task_op_15_1 != null){task_op_15_1.SetActive(true);}
-                }
-            }
-            if(buttons[6] == 0)
-            {
-                GameObject parentObject = GameObject.Find("logicGate");
-                GameObject task_op_11 = parentObject.transform.Find("task op (11)").gameObject;
-                if ( task_op_11 != null){task_op_11.SetActive(false);}
-            }
-            XOR();
-       }
+
+        if(nand1 != null && nand2 != null)
+        {
+            buttonsActivate(15, false);
+        }
+        else{
+            buttonsActivate(15, true);
+        }
+        XOR();
     }
 
     public void OR()
     {
-        if((buttons[1] == 1 && buttons[2] == 1) || (buttons[1] == 1 && buttons[2] == 0) || (buttons[1] == 0 && buttons[2] == 1))
+        bool not2 = !(buttons[1] == 0 && buttons[2] == 0);
+        bool button1 = buttons[1] > 0 ? true : false;
+        bool button2 = buttons[2] > 0 ? true : false;
+        if (not2 == true)
         {
-            if(buttons[0] == 0)
-            {
-             GameObject parentObject1 = GameObject.Find("logicGate");
-             GameObject task_op_9 = parentObject1.transform.Find("task op (9)").gameObject;
-             if (task_op_9 != null){task_op_9.SetActive(true);}
-            }
-            Debug.Log("Olá or");
-            if(buttons[1] == 1)
-            {
-             GameObject parentObject1 = GameObject.Find("logicGate");
-             GameObject task_op_1_ = parentObject1.transform.Find("task op (1)").gameObject;
-             if (task_op_1_ != null){task_op_1_.SetActive(true);} 
-            }
-            if(buttons[1] == 0)
-            {
-             GameObject parentObject1 = GameObject.Find("logicGate");
-             GameObject task_op_1_ = parentObject1.transform.Find("task op (1)").gameObject;
-             if (task_op_1_ != null){task_op_1_.SetActive(false);} 
-            }
-            if(buttons[2] == 0)
-            {
-             GameObject parentObject1 = GameObject.Find("logicGate");
-             GameObject task_op_2_ = parentObject1.transform.Find("task op (2)").gameObject;
-             if (task_op_2_ != null){task_op_2_.SetActive(false);} 
-
-            }
-            if(buttons[2] == 1)
-            {
-             GameObject parentObject1 = GameObject.Find("logicGate");
-             GameObject task_op_2_ = parentObject1.transform.Find("task op (2)").gameObject;
-             if (task_op_2_ != null){task_op_2_.SetActive(true);} 
-            }
-             GameObject parentObject = GameObject.Find("logicGate");
-             GameObject task_op_5 = parentObject.transform.Find("task op (5)").gameObject;
-             if (task_op_5 != null){task_op_5.SetActive(true);} 
-             AND();
+            buttonsActivate(16, true);
+            buttonsActivate(1, button1);
+            buttonsActivate(2, button2);
         }
-        else{
-            Debug.Log("Tô aqui no or");
-            GameObject parentObject = GameObject.Find("logicGate");
-            GameObject task_op_5 = parentObject.transform.Find("task op (5)").gameObject;
-            if (task_op_5 != null){task_op_5.SetActive(false);} 
-
-            GameObject parentObject1 = GameObject.Find("logicGate");
-            GameObject task_op_9 = parentObject1.transform.Find("task op (9)").gameObject;
-            if (task_op_9 != null){task_op_9.SetActive(false);}
+        if(not2 == false)
+        {
+            buttonsActivate(16, false);
+            buttonsActivate(1, button1);
+            buttonsActivate(2, button2);
         }
+        AND();
+        XOR();
     }
 
     public void NOR()
     {
-        Debug.Log("Tô no nor");
-        if(buttons[4] == 0 && buttons[5] == 0)
-        {
-           GameObject parentObject = GameObject.Find("logicGate");
-           GameObject task_op_14 = parentObject.transform.Find("task op (14)").gameObject;
-           if (task_op_14 != null){task_op_14.SetActive(true);} 
+        bool button4 = buttons[4] > 0 ? true : false;
+        bool button5 = buttons[5] > 0 ? true : false;
+        
+        buttonsActivate(4, button4);
+        buttonsActivate(5, button5);
 
-           GameObject parentObject_1 = GameObject.Find("logicGate");
-           GameObject task_op_4_2 = parentObject_1.transform.Find("task op (4)").gameObject;
-           if (task_op_4_2 != null){task_op_4_2.SetActive(false);} 
-
-           GameObject parentObject_4 = GameObject.Find("logicGate");
-           GameObject task_op_6 = parentObject_4.transform.Find("task op (6)").gameObject;
-           if (task_op_6 != null){task_op_6.SetActive(false);}
-
-           XOR();
-        }
-        else
-        {
-           GameObject parentObject = GameObject.Find("logicGate");
-           GameObject task_op_14 = parentObject.transform.Find("task op (14)").gameObject;
-           task_op_14.SetActive(false);
-            
-            if(buttons[4] == 1)
-            {
-               GameObject parentObject_1 = GameObject.Find("logicGate");
-               GameObject task_op_4_2 = parentObject_1.transform.Find("task op (4)").gameObject;
-               if (task_op_4_2 != null){task_op_4_2.SetActive(true);} 
-            }
-            if(buttons[5] == 1)
-            {
-               GameObject parentObject_2 = GameObject.Find("logicGate");
-               GameObject task_op_6 = parentObject_2.transform.Find("task op (6)").gameObject;
-               if (task_op_6 != null){task_op_6.SetActive(true);}
-            }
-            if(buttons[4] == 0)
-            {
-                Debug.Log("Cheguei aqui");
-                GameObject parentObject_3 = GameObject.Find("logicGate");
-                GameObject task_op_4_3 = parentObject_3.transform.Find("task op (4)").gameObject;
-                if (task_op_4_3 != null){task_op_4_3.SetActive(false);} 
-            }
-            if(buttons[5] == 0)
-            {
-                GameObject parentObject_4 = GameObject.Find("logicGate");
-                GameObject task_op_6 = parentObject_4.transform.Find("task op (6)").gameObject;
-                if (task_op_6 != null){task_op_6.SetActive(false);}
-            }
-        }
+        if(button4 == false && button5 == false){buttonsActivate(14, true);}
+        else{buttonsActivate(14, false);}
+        XOR();
     }
 
     public void XOR()
-    {   
-
-    GameObject xor1 = GameObject.Find("task op (12)");
-    GameObject xor2 = GameObject.Find("task op (13)");
-    GameObject xor3 = GameObject.Find("task op (14)");
-    GameObject xor4 = GameObject.Find("task op (15)");
-
-    GameObject parentObject = GameObject.Find("logicGate");
-
-    if (parentObject != null)
     {
-        GameObject lineLamp = parentObject.transform.Find("Lamp").gameObject;
+        GameObject parentObject = GameObject.Find("logicGate");
+        GameObject xor1 = GameObject.Find("task op (12)");
+        GameObject xor2 = GameObject.Find("task op (13)");
+        GameObject xor3 = GameObject.Find("task op (14)");
+        GameObject xor4 = GameObject.Find("task op (15)");
 
-        if (lineLamp != null)
+        if (parentObject != null)
         {
-            if (xor1 != null || xor2 != null)
+            GameObject lineLamp = parentObject.transform.Find("Lamp").gameObject;
+            if((xor1 != null && xor2 != null) || (xor1 == null && xor2 == null))
             {
-                lineLamp.SetActive(true);
-            }
+              lineLamp.SetActive(false);
+            }else{lineLamp.SetActive(true);}
 
-            if (xor1 != null && xor2 != null)
+            if(xor3 != null && xor4 != null)
             {
-                lineLamp.SetActive(false);
+                buttonsActivate(13, false);
             }
-        }
+            else{buttonsActivate(13, true);}
 
-        if (xor3 != null || xor4 != null)
-        {
-            GameObject task_op_10 = parentObject.transform.Find("task op (13)").gameObject;
-            if (task_op_10 != null)
-            {
-                task_op_10.SetActive(true);
-            }
-        }
-
-        if (xor3 != null && xor4 != null)
-        {
-            GameObject task_op_13 = parentObject.transform.Find("task op (13)").gameObject;
-            if (task_op_13 != null)
-            {
-                task_op_13.SetActive(false);
-            }
         }
     }
-        
-    }
-    //NOT, AND, NAND, OR, NOR, XOr
 }
